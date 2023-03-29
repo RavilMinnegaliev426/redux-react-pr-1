@@ -1,49 +1,25 @@
-import "./App.css";
-
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { addTodo } from "./store/todoSlice";
+
 import TodoList from "./components/todoList";
 import InputFiled from "./components/inputFiled";
+
+import "./App.css";
+
 function App() {
-  const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
-
-  const addTodo = () => {
-    if (text.trim().length) {
-      setTodos([
-        ...todos,
-        {
-          id: new Date().toISOString(),
-          text,
-          complited: false,
-        },
-      ]);
-      setText("");
-    }
-  };
-
-  const toggelTodoComlite = (todoId) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id !== todoId) return todo;
-        return {
-          ...todo,
-          complited: !todo.complited,
-        };
-      })
-    );
-  };
-  const removeTodo = (todoId) => {
-    setTodos(todos.filter((todo) => todo.id !== todoId));
+  const dispatch = useDispatch();
+  const addTask = () => {
+    dispatch(addTodo({ text }));
+    setText("");
   };
 
   return (
     <div className="App">
-      <InputFiled text={text} handelInput={setText} handelSubmit={addTodo} />
-      <TodoList
-        todos={todos}
-        toggelTodoComlite={toggelTodoComlite}
-        removeTodo={removeTodo}
-      />
+      <InputFiled text={text} handelInput={setText} handelSubmit={addTask} />
+      <TodoList />
     </div>
   );
 }
